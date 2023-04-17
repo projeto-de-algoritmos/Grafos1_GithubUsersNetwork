@@ -12,16 +12,17 @@ Temas:
  
  (Apague essa seção)
 
-# NomedoProjeto
+# Tamo decidindo o nome
 
-**Número da Lista**: X<br>
-**Conteúdo da Disciplina**: XXXXXXXXXX<br>
+**Número da Lista**: X
+
+**Conteúdo da Disciplina**: XXXXXXXXXX
 
 ## Alunos
 |Matrícula | Aluno |
 | -- | -- |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+| 16/0127912  |  João Vitor Ferreira Alves |
+| 16/0149410  |  Yudi Yamane de Azevedo |
 
 ## Sobre 
 Descreva os objetivos do seu projeto e como ele funciona. 
@@ -30,8 +31,9 @@ Descreva os objetivos do seu projeto e como ele funciona.
 Adicione 3 ou mais screenshots do projeto em funcionamento.
 
 ## Instalação 
-**Linguagem**: xxxxxx<br>
-**Framework**: (caso exista)<br>
+**Linguagem**: TypeScript
+
+<!-- **Framework**: (caso exista)<br> -->
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
 ## Uso 
