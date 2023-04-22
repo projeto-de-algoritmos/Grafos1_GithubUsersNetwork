@@ -12,7 +12,6 @@ interface User {
 
 interface _Node {
 	login: string;
-	following: Login[];
 	followers: Login[];
 }
 interface Data {
@@ -32,13 +31,11 @@ export const data: Data = {
 	graph: [
 		{
 			login: 'yudi-azvd',
-			following: ['user 1', 'user 2'],
-			followers: ['user 1', 'user 2'],
+			followers: ['vitoaAlve7', 'user 2'],
 		},
 		{
 			login: 'victorAlves7',
-			following: ['user 1', 'user 2'],
-			followers: ['user 1', 'user 2'],
+			followers: ['yudi-azvd', 'user 2'],
 		},
 	],
 };
