@@ -12,7 +12,7 @@
 
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
-<pre> {data.users.length} </pre>
+<pre> Quantidade de usuários: {data.users.length} </pre>
 <pre>{JSON.stringify(data.users, null, 2)}</pre>
 
 <p>{data.dirContent}</p>

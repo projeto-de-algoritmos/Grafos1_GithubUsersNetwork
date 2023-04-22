@@ -1,5 +1,6 @@
 import fs from 'fs';
 import type { PageServerLoad } from './$types';
+import { GITHUB_TOKEN } from '$env/static/private';
 
 type SomeType = {
 	dirContent: string[];
@@ -14,27 +15,42 @@ type User = {
 	following_url: string;
 };
 
-export const load: PageServerLoad<SomeType> = async () => {
-	const dirContent = fs.readdirSync('.');
-
-	const token = '...';
+async function fetchUsers(page: number, maxUsersPerPage: number) {
 	const org = 'projeto-de-algoritmos';
+
 	const response = await fetch(
 		`https://api.github.com/orgs/${org}/members?` +
 			new URLSearchParams({
 				filter: 'all',
-				per_page: '100',
-				page: '3',
+				per_page: String(maxUsersPerPage),
+				page: String(page),
 			}),
 		{
 			headers: {
 				Accept: ' application/vnd.github+json',
 				'X-GitHub-Api-Version': '2022-11-28',
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${GITHUB_TOKEN}`,
 			},
 		}
 	);
-	const users: User[] = await response.json();
+
+	return (await response.json()) as User[];
+}
+
+export const load: PageServerLoad<SomeType> = async () => {
+	const dirContent = fs.readdirSync('.');
+
+	let users: User[] = [];
+	const maxUsersPerPage = 100;
+
+	let newUsers: User[] = [];
+	let page = 1;
+	while (true) {
+		newUsers = await fetchUsers(page, maxUsersPerPage);
+		users = users.concat(newUsers);
+		if (newUsers.length < maxUsersPerPage) break;
+		page++;
+	}
 
 	return {
 		dirContent,
