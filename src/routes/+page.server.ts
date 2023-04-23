@@ -92,6 +92,7 @@ export const load: PageServerLoad<SomeType> = async () => {
 	console.info('fetching members done');
 
 	console.info('fetching followers of members');
+	const newUsersFromFollowers = new Set<User>();
 	for (const u of users) {
 		console.info('fetching followers:', u.login);
 		const followers = await fetchFollowers(u.login);
@@ -102,7 +103,7 @@ export const load: PageServerLoad<SomeType> = async () => {
 		};
 
 		followers.forEach((f) => {
-			users.add(f);
+			newUsersFromFollowers.add(f);
 			node.followers.push(f.login);
 		});
 
@@ -110,6 +111,10 @@ export const load: PageServerLoad<SomeType> = async () => {
 		console.info('fetching followers:', u.login, followers.length);
 	}
 	console.info('fetching followers of members done');
+
+	for (const u of newUsersFromFollowers) {
+		users.add(u);
+	}
 
 	const u = Array.from(users);
 
