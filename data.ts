@@ -39,3 +39,12 @@ export const data: Data = {
 		},
 	],
 };
+
+/*
+g: Dipgrah
+for (const n of data.graph) {
+	for (let i = 0; i < n.followers.length; i++) {
+		g.add(n.followers[i], n.login)
+	}
+}
+*/

@@ -4,7 +4,7 @@ export default class DiBfs {
 	visited: boolean[];
 	bfsTree: Digraph;
 
-	constructor(private graph: Digraph, s = 0, d = 0) {
+	constructor(private graph: Digraph, s = 0) {
 		this.visited = new Array(graph.vertices).fill(false);
 		this.bfsTree = new Digraph(graph.vertices);
 		this.bfs(s);
@@ -27,12 +27,5 @@ export default class DiBfs {
 				v = v.next;
 			}
 		}
-	}
-
-	/**
-	 * Não foi implementado!
-	 */
-	distance(v: number, w: number): number {
-		throw new Error('Not implemented');
 	}
 }
