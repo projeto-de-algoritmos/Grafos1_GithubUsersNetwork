@@ -8,14 +8,28 @@
 	<title>Rede de Usuários GitHub</title>
 </svelte:head>
 
-<h1>Welcome to SvelteKit</h1>
-
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-
 <p>Quantidade de usuários: {data.users.length}</p>
 
-<ol>
-	{#each data.users as user, i}
-		<li><code>{user.login}</code></li>
+<div style="display: grid; grid-template-columns: 1fr 4fr;">
+	{#each data.graph as node}
+		<div>
+			<strong>
+				<code>{node.login} </code>
+			</strong>
+		</div>
+
+		<div>
+			<code>{'<-'}</code>
+			{#each node.followers as f}
+				{f}{', '}
+			{/each}
+		</div>
 	{/each}
-</ol>
+</div>
+
+<style>
+	div > div {
+		padding: 1em;
+		/* border: 1px solid #fff; */
+	}
+</style>
