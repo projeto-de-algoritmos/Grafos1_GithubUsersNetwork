@@ -12,7 +12,10 @@
 
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
-<pre> Quantidade de usuários: {data.users.length} </pre>
-<pre>{JSON.stringify(data.users, null, 2)}</pre>
+<p>Quantidade de usuários: {data.users.length}</p>
 
-<p>{data.dirContent}</p>
+<ol>
+	{#each data.users as user, i}
+		<li><code>{user.login}</code></li>
+	{/each}
+</ol>
