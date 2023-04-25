@@ -4,9 +4,9 @@ import { GITHUB_TOKEN } from '$env/static/private';
 import data from '../../data.json';
 import type { ApiUser, User, _Node } from '../defs';
 
-type SomeType = {
+type Data = {
 	users: User[];
-	graph: _Node[];
+	connections: _Node[];
 };
 
 let requestsMade = 0;
@@ -64,9 +64,9 @@ async function fetchMembers(page: number, maxUsersPerPage: number): Promise<User
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getAllUsersFromGithub() {
+async function getAllUsersFromGithub(): Promise<Data> {
 	const users = new Set<User>();
-	const graph = [];
+	const connections = [];
 	const maxUsersPerPage = 100;
 
 	let newUsers: User[] = [];
@@ -97,7 +97,7 @@ async function getAllUsersFromGithub() {
 			node.followers.push(f.login);
 		});
 
-		graph.push(node);
+		connections.push(node);
 		console.info('fetching followers:', u.login, followers.length);
 	}
 	console.info('fetching followers of members done');
@@ -107,18 +107,18 @@ async function getAllUsersFromGithub() {
 	}
 
 	const u = Array.from(users);
-	const data: { users: User[]; graph: _Node[] } = { users: u, graph };
+	const data: Data = { users: u, connections };
 	fs.writeFileSync('data.json', JSON.stringify(data, null, 1));
 	console.log('u.length', u.length);
 	console.log({ requestsMade });
 
 	return {
 		users: u,
-		graph,
+		connections,
 	};
 }
 
-export const load: PageServerLoad<SomeType> = async () => {
+export const load: PageServerLoad<Data> = async () => {
 	// const dirContent = fs.readdirSync('.');
 	// const data = await getAllUsersFromGithub()
 	return data;

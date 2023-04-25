@@ -22,14 +22,15 @@ export default class SymbolGraph {
 		this.g = new Digraph(logins.length);
 		for (let i = 0; i < connections.length; i++) {
 			const login = connections[i].login;
+
 			v = this.table.get(login);
-			if (!v) {
-				throw new Error('v is not defined in table for login:' + login);
+			if (v === undefined) {
+				throw new Error('v is not defined in table for login: ' + login);
 			}
 
 			for (let f = 0; f < connections[i].followers.length; f++) {
 				w = this.table.get(connections[i].followers[f]);
-				if (!w) {
+				if (w === undefined) {
 					throw new Error('w is not defined in table for follower: ' + connections[i].followers[f]);
 				}
 
