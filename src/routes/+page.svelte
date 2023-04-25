@@ -10,6 +10,8 @@
 
 <p>Quantidade de usuários: {data.users.length}</p>
 
+<p>Quantidade de nós: {data.graph.length}</p>
+
 <div style="display: grid; grid-template-columns: 1fr 4fr;">
 	{#each data.graph as node}
 		<div>

@@ -2,6 +2,7 @@ import fs from 'fs';
 import type { PageServerLoad } from './$types';
 import { GITHUB_TOKEN } from '$env/static/private';
 import data from '../../data.json';
+import type { ApiUser, User, _Node } from '../defs';
 
 type SomeType = {
 	users: User[];
@@ -10,38 +11,6 @@ type SomeType = {
 
 let requestsMade = 0;
 
-type Login = string;
-
-type User = {
-	login: Login;
-	/** FIXME: GET nos membros de uma organização não contém o campo name. Por enquanto
-	 * estamos preenchendo com login
-	 */
-	name: string;
-	avatar_url: string;
-};
-
-type ApiUser = {
-	id: number;
-	login: Login;
-	node_id: string;
-	avatar_url: string;
-	gravatar_id: string;
-	url: string;
-	html_url: string;
-	followers_url: string;
-	following_url: string;
-	gists_url: string;
-	starred_url: string;
-	subscriptions_url: string;
-	organizations_url: string;
-	repos_url: string;
-	events_url: string;
-	received_events_url: string;
-	type: string;
-	site_admin: false;
-};
-
 const requestInit: RequestInit = {
 	headers: {
 		Accept: ' application/vnd.github+json',
@@ -49,11 +18,6 @@ const requestInit: RequestInit = {
 		Authorization: `Bearer ${GITHUB_TOKEN}`,
 	},
 };
-
-interface _Node {
-	login: Login;
-	followers: Login[];
-}
 
 async function fetchFollowers(user: string): Promise<User[]> {
 	let apiFollowers: ApiUser[] = [];
@@ -99,6 +63,7 @@ async function fetchMembers(page: number, maxUsersPerPage: number): Promise<User
 	return members.map((m) => ({ login: m.login, name: m.login, avatar_url: m.avatar_url }));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getAllUsersFromGithub() {
 	const users = new Set<User>();
 	const graph = [];
@@ -156,6 +121,5 @@ async function getAllUsersFromGithub() {
 export const load: PageServerLoad<SomeType> = async () => {
 	// const dirContent = fs.readdirSync('.');
 	// const data = await getAllUsersFromGithub()
-
 	return data;
 };
