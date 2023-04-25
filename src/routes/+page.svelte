@@ -1,52 +1,38 @@
 <script lang="ts">
+	import Select from '../components/Select.svelte';
 	import SymbolGraph from '../symboldigraph';
 	import type { PageData } from './$types';
 	export let data: PageData;
 
 	const logins = data.users.map((u) => u.login);
-
 	const sg = new SymbolGraph(logins, data.connections);
-	let filter = '';
-
-	let filteredLogins: string[] = [];
 
 	const g = sg.graph();
 
-	const filterLogins = (e: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
-		console.log('filtering...');
-
-		filteredLogins = [];
-		for (let i = 0; i < logins.length; i++) {
-			if (logins[i].indexOf(e.currentTarget.value) >= 0) {
-				filteredLogins.push(logins[i]);
-			}
-		}
-
-		console.log(filteredLogins);
-
-		console.log('filtering... done');
-	};
+	let userOrigin = '';
+	let userDestination = '';
 </script>
 
 <svelte:head>
 	<title>Rede de Usuários GitHub</title>
 </svelte:head>
 
-<select>
-	{#if filter.length === 0}
-		{#each logins as login}
-			<option value={login}>{login}</option>
-		{/each}
-	{:else}
-		{#each filteredLogins as login}
-			<option value={login}>{login}</option>
-		{/each}
-	{/if}
-</select>
+<main>
+	<h1>Rede (de Alguns) Usuários do GitHub</h1>
 
-<input type="text" on:keyup={filterLogins} bind:value={filter} />
+	<div class="inputs">
+		<div>
+			<p>Usuário de origem selecionado: {userOrigin}</p>
+			<Select values={logins} bind:value={userOrigin} />
+		</div>
+		<div>
+			<p>Usuário de destino selecionado: {userDestination}</p>
+			<Select values={logins} bind:value={userDestination} />
+		</div>
+	</div>
+</main>
 
-<div style="display: grid; grid-template-columns: 1fr 4fr;">
+<!-- <div style="display: grid; grid-template-columns: 1fr 4fr;">
 	{#each data.connections as node}
 		<div>
 			<strong>
@@ -62,7 +48,7 @@
 		</div>
 	{/each}
 </div>
-
+ -->
 <style>
 	div > div {
 		padding: 1em;
