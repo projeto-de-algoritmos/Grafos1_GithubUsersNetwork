@@ -1,8 +1,8 @@
 import fs from 'fs';
 import type { PageServerLoad } from './$types';
 import { GITHUB_TOKEN } from '$env/static/private';
-import data from '../../data.json';
-import type { ApiUser, User, _Node } from '../defs';
+// import data from '../../data.json';
+import type { ApiUser, User, _Node, Login } from '../defs';
 
 type Data = {
 	users: User[];
@@ -65,7 +65,8 @@ async function fetchMembers(page: number, maxUsersPerPage: number): Promise<User
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getAllUsersFromGithub(): Promise<Data> {
-	const users = new Set<User>();
+	const users: User[] = [];
+	const logins = new Set<Login>();
 	const connections = [];
 	const maxUsersPerPage = 100;
 
@@ -75,17 +76,24 @@ async function getAllUsersFromGithub(): Promise<Data> {
 	console.info('fetching members');
 	while (true) {
 		newUsers = await fetchMembers(page, maxUsersPerPage);
-		newUsers.forEach((u) => users.add(u));
+		newUsers.forEach((u) => {
+			users.push(u);
+			logins.add(u.login);
+		});
 		if (newUsers.length < maxUsersPerPage) break;
 		page++;
 	}
 	console.info('fetching members done');
 
 	console.info('fetching followers of members');
-	const newUsersFromFollowers = new Set<User>();
+
 	for (const u of users) {
 		console.info('fetching followers:', u.login);
 		const followers = await fetchFollowers(u.login);
+		followers.forEach((f) => {
+			if (!logins.has(f.login)) users.push(f);
+			logins.add(f.login);
+		});
 
 		const node: _Node = {
 			login: u.login,
@@ -93,8 +101,11 @@ async function getAllUsersFromGithub(): Promise<Data> {
 		};
 
 		followers.forEach((f) => {
-			newUsersFromFollowers.add(f);
 			node.followers.push(f.login);
+			// if (!logins.has(f.login)) {
+			// 	users.push(f);
+			// 	logins.add(f.login);
+			// }
 		});
 
 		connections.push(node);
@@ -102,24 +113,15 @@ async function getAllUsersFromGithub(): Promise<Data> {
 	}
 	console.info('fetching followers of members done');
 
-	for (const u of newUsersFromFollowers) {
-		if (!users.has(u)) users.add(u);
-	}
-
-	const u = Array.from(users);
-	const data: Data = { users: u, connections };
+	const data: Data = { users, connections };
 	fs.writeFileSync('data.json', JSON.stringify(data, null, 1));
-	console.log('u.length', u.length);
+	console.log('u.length', users.length);
 	console.log({ requestsMade });
 
-	return {
-		users: u,
-		connections,
-	};
+	return data;
 }
 
 export const load: PageServerLoad<Data> = async () => {
-	// const dirContent = fs.readdirSync('.');
-	// const data = await getAllUsersFromGithub()
+	const data = await getAllUsersFromGithub();
 	return data;
 };
