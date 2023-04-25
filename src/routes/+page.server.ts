@@ -35,6 +35,11 @@ async function fetchFollowers(user: string): Promise<User[]> {
 				}),
 			requestInit
 		);
+		if (response.status !== 200) {
+			const error = await response.json();
+			throw new Error(JSON.stringify(error, null, 1));
+		}
+
 		requestsMade++;
 
 		newFollowers = (await response.json()) as ApiUser[];
@@ -58,8 +63,15 @@ async function fetchMembers(page: number, maxUsersPerPage: number): Promise<User
 			}),
 		requestInit
 	);
+
+	if (response.status !== 200) {
+		const error = await response.json();
+		throw new Error(JSON.stringify(error, null, 1));
+	}
 	requestsMade++;
 	const members = (await response.json()) as ApiUser[];
+	console.log({ members });
+
 	return members.map((m) => ({ login: m.login, name: m.login, avatar_url: m.avatar_url }));
 }
 
@@ -67,7 +79,7 @@ async function fetchMembers(page: number, maxUsersPerPage: number): Promise<User
 async function getAllUsersFromGithub(): Promise<Data> {
 	const users: User[] = [];
 	const logins = new Set<Login>();
-	const connections = [];
+	const connections: _Node[] = [];
 	const maxUsersPerPage = 100;
 
 	let newUsers: User[] = [];
@@ -85,33 +97,36 @@ async function getAllUsersFromGithub(): Promise<Data> {
 	}
 	console.info('fetching members done');
 
-	console.info('fetching followers of members');
+	// console.info('fetching followers of members');
+	// let i = 0;
+	// for (const u of users) {
+	// 	console.info(
+	// 		`requests made ${requestsMade} u ${i}/${users.length} | fetching followers: ${u.login}`
+	// 	);
+	// 	const followers = await fetchFollowers(u.login);
+	// 	followers.forEach((f) => {
+	// 		if (!logins.has(f.login)) users.push(f);
+	// 		logins.add(f.login);
+	// 	});
 
-	for (const u of users) {
-		console.info('fetching followers:', u.login);
-		const followers = await fetchFollowers(u.login);
-		followers.forEach((f) => {
-			if (!logins.has(f.login)) users.push(f);
-			logins.add(f.login);
-		});
+	// 	const node: _Node = {
+	// 		login: u.login,
+	// 		followers: [],
+	// 	};
 
-		const node: _Node = {
-			login: u.login,
-			followers: [],
-		};
+	// 	followers.forEach((f) => {
+	// 		node.followers.push(f.login);
+	// 		// if (!logins.has(f.login)) {
+	// 		// 	users.push(f);
+	// 		// 	logins.add(f.login);
+	// 		// }
+	// 	});
 
-		followers.forEach((f) => {
-			node.followers.push(f.login);
-			// if (!logins.has(f.login)) {
-			// 	users.push(f);
-			// 	logins.add(f.login);
-			// }
-		});
-
-		connections.push(node);
-		console.info('fetching followers:', u.login, followers.length);
-	}
-	console.info('fetching followers of members done');
+	// 	connections.push(node);
+	// 	i++;
+	// 	console.info('fetching followers:', u.login, followers.length);
+	// }
+	// console.info('fetching followers of members done');
 
 	const data: Data = { users, connections };
 	fs.writeFileSync('data.json', JSON.stringify(data, null, 1));
