@@ -1,16 +1,22 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+	const onChange = () => dispatch('change');
 	export let value: string = '';
 	export let values: string[] = [];
-	export let filteredValues: string[] = [];
+	let filteredValues: string[] = [];
+
+	type WithTarget<Event, Target> = Event & { currentTarget: Target };
 
 	let filter = '';
 
-	const filterLogins = (e: Event & { currentTarget: EventTarget & HTMLSelectElement }) => {
+	const filterLogins = (e: WithTarget<KeyboardEvent, HTMLInputElement>) => {
 		console.log('filtering...');
 
 		filteredValues = [];
 		for (let i = 0; i < values.length; i++) {
-			if (values[i].indexOf(e.currentTarget.value) >= 0) {
+			if (values[i].toLowerCase().indexOf(e.currentTarget.value.toLowerCase()) >= 0) {
 				filteredValues.push(values[i]);
 			}
 		}
@@ -22,7 +28,7 @@
 <div>
 	<input type="text" on:keyup={filterLogins} bind:value={filter} />
 
-	<select bind:value>
+	<select bind:value on:change={onChange}>
 		{#if filter.length === 0}
 			{#each values as value}
 				<option {value}>{value}</option>
@@ -39,5 +45,9 @@
 	div {
 		display: flex;
 		flex-direction: column;
+	}
+
+	div > input {
+		margin-bottom: 8px;
 	}
 </style>

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import type { PageServerLoad } from './$types';
 import { GITHUB_TOKEN } from '$env/static/private';
-// import data from '../../data.json';
+import data from '../../data.json';
 import type { ApiUser, User, _Node, Login } from '../defs';
 
 type Data = {
@@ -137,6 +137,6 @@ async function getAllUsersFromGithub(): Promise<Data> {
 }
 
 export const load: PageServerLoad<Data> = async () => {
-	const data = await getAllUsersFromGithub();
+	// const data = await getAllUsersFromGithub();
 	return data;
 };

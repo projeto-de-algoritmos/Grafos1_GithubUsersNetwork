@@ -31,7 +31,8 @@ export default class SymbolGraph {
 			for (let f = 0; f < connections[i].followers.length; f++) {
 				w = this.table.get(connections[i].followers[f]);
 				if (w === undefined) {
-					throw new Error('w is not defined in table for follower: ' + connections[i].followers[f]);
+					continue;
+					// throw new Error('w is not defined in table for follower: ' + connections[i].followers[f]);
 				}
 
 				this.g.addEdge(w, v);
