@@ -26,7 +26,7 @@
 </script>
 
 <div>
-	<input type="text" on:keyup={filterLogins} bind:value={filter} />
+	<input placeholder="Username do GitHub" type="text" on:keyup={filterLogins} bind:value={filter} />
 
 	<select bind:value on:change={onChange}>
 		{#if filter.length === 0}

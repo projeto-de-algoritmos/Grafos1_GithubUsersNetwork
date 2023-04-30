@@ -1,3 +1,5 @@
+import type { Vector } from './defs';
+
 export class Node {
 	id = 0;
 	next: Node | null = null;
@@ -9,11 +11,6 @@ export class Node {
 		return n;
 	}
 }
-
-export type Vector = {
-	x: number;
-	y: number;
-};
 
 export default class Digraph {
 	adj: (Node | null)[] = [];
