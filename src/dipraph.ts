@@ -17,11 +17,13 @@ export default class Digraph {
 	edges = 0;
 	vertices = 0;
 	coords: Vector[] = [];
+	selected: boolean[] = [];
 
 	constructor(vertices: number) {
 		if (vertices <= 0) throw new Error('Invalid number of vertices');
 
 		this.adj = new Array(vertices).fill(null);
+		this.selected = new Array(vertices).fill(false);
 		this.vertices = vertices;
 		this.coords = new Array(vertices);
 		for (let i = 0; i < this.coords.length; i++) {

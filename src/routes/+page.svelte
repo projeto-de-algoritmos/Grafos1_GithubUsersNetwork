@@ -5,12 +5,13 @@
 	import SymbolGraph from '../symboldigraph';
 	import type { PageData } from './$types';
 	import { setCoordsRandomly } from '../coords';
-	import { setDrawables, startRendering } from './renderer';
+	import { setDrawables, startRendering, stopRendering } from './renderer';
 	export let data: PageData;
 
 	let canvas: HTMLCanvasElement;
 	let canvasWidth = 400;
 	let canvasHeight = 400;
+	let bfs: DiBfs | null = null;
 
 	const logins = data.users.map((u) => u.login);
 	const NOT_SELECTED = '(não selecionado)';
@@ -26,17 +27,37 @@
 
 	let pathToDestinationIds: number[] = [];
 	let pathToDestinationLogins: string[] = [];
-	let frame: number;
 
 	function runBfs() {
+		// FIXME: idealmente haveria um loop de renderização. Mas da última
+		// vez que eu fiz ele ficava cada vez mais devagar com o tempo. A
+		// renderização é pontual agora com a chamada de `startRendering`
+		startRendering();
 		if (userOrigin === '' || userDestination === '') return;
 
+		bfs = new DiBfs(g, userOriginId);
 		pathToDestinationLogins = [];
-		const bfs = new DiBfs(g, userOriginId);
 		pathToDestinationIds = bfs.pathTo(userDestinationId);
 		for (const id of pathToDestinationIds) {
 			pathToDestinationLogins.push(sg.name(id));
 		}
+
+		setDrawables(g, canvas, pathToDestinationIds);
+		startRendering();
+	}
+
+	function reset() {
+		console.log('resetando valores');
+		userOrigin = '';
+		userDestination = '';
+		userOriginId = -1;
+		userDestinationId = -1;
+		pathToDestinationIds = [];
+		pathToDestinationLogins = [];
+		bfs = null;
+
+		setDrawables(g, canvas, pathToDestinationIds);
+		startRendering();
 	}
 
 	onMount(() => {
@@ -53,8 +74,12 @@
 			yOffset: 15,
 		});
 
-		setDrawables(g, canvas);
+		setDrawables(g, canvas, pathToDestinationIds);
 		startRendering();
+	});
+
+	onMount(() => {
+		// stopRendering();
 	});
 </script>
 
@@ -71,7 +96,9 @@
 				values={logins}
 				bind:value={userOrigin}
 				on:change={() => {
+					g.selected[userOriginId] = false;
 					userOriginId = sg.id(userOrigin);
+					g.selected[userOriginId] = true;
 					runBfs();
 				}}
 			/>
@@ -85,7 +112,9 @@
 				values={logins}
 				bind:value={userDestination}
 				on:change={() => {
+					g.selected[userDestinationId] = false;
 					userDestinationId = sg.id(userDestination);
+					g.selected[userDestinationId] = true;
 					runBfs();
 				}}
 			/>
@@ -97,22 +126,16 @@
 
 	<div class="graph-path">
 		{#if pathToDestinationIds.length === 0}
-			<pre>Não há caminho</pre>
+			<p>Não há caminho</p>
 		{:else}
-			<pre>{pathToDestinationIds}</pre>
-			<pre>{pathToDestinationLogins}</pre>
+			<pre>{pathToDestinationLogins.join(' -> ')}</pre>
 		{/if}
 	</div>
 
+	<button on:click={reset}>Resetar</button>
 	<div id="canvas-container">
 		<canvas width={canvasWidth} height={canvasHeight} />
 	</div>
-
-	<p>Rodar BFS de origem -> destino</p>
-
-	<small>
-		Faz sentido diferenciar origem e destino? Não seria legal mostrar tanto a ida como a volta?
-	</small>
 </main>
 
 <style>
