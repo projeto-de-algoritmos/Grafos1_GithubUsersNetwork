@@ -9,7 +9,8 @@ const accentColor = '#646cff';
 const nodeBackgroundColor = '#242424';
 const nodeSelectedColor = '#E3C240';
 
-const nodeRadius = 8;
+const nodeRadius = 10;
+const selectedNodeRadius = nodeRadius * 1.2;
 const canvasBackgroundColor = '#2e2e2e';
 const lineWidth = 1;
 const lineColor = '#646cff25';
@@ -92,7 +93,6 @@ function renderGraphNodes(
 	const yOffset = 4;
 	const xOffset = 6;
 	let isSelected = false;
-	const selectedNodeRadius = nodeRadius * 1.2;
 	for (let i = 0; i < nodes.length; i++) {
 		isSelected = selected[i];
 		context.fillStyle = nodeBackgroundColor;

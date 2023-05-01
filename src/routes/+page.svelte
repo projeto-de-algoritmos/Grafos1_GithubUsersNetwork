@@ -62,8 +62,8 @@
 		canvas = document.querySelector('canvas')!;
 		const canvasContainer = document.querySelector<HTMLDivElement>('#canvas-container')!;
 
-		canvas.width = canvasContainer.clientWidth;
-		canvas.height = canvas.width / 1.8;
+		canvas.width = canvasContainer.clientWidth * 0.88;
+		canvas.height = canvasContainer.clientHeight;
 		setCoordsRandomly({
 			g,
 			xMax: canvas.width - 30,
@@ -84,64 +84,73 @@
 </svelte:head>
 
 <main>
-	<h1>Rede (de alguns) Usuários do GitHub</h1>
+	<div class="left">
+		<h2>Rede (de alguns) Usuários do GitHub</h2>
 
-	<div class="inputs">
-		<div>
-			<Select
-				values={logins}
-				bind:value={userOrigin}
-				on:change={() => {
-					g.selected[userOriginId] = false;
-					userOriginId = sg.id(userOrigin);
-					g.selected[userOriginId] = true;
-					runBfs();
-				}}
-			/>
-			<p>Usuário de <strong>origem</strong> selecionado:</p>
-			<p>{userOrigin.length > 0 ? userOrigin : NOT_SELECTED}</p>
-			<p>{userOriginId === -1 ? NOT_SELECTED : 'ID: ' + userOriginId}</p>
+		<div class="inputs">
+			<div>
+				<Select
+					values={logins}
+					bind:value={userOrigin}
+					on:change={() => {
+						g.selected[userOriginId] = false;
+						userOriginId = sg.id(userOrigin);
+						g.selected[userOriginId] = true;
+						runBfs();
+					}}
+				/>
+				<p>Usuário de <strong>origem</strong> selecionado:</p>
+				<p>{userOrigin.length > 0 ? userOrigin : NOT_SELECTED}</p>
+				<p>{userOriginId === -1 ? NOT_SELECTED : 'ID: ' + userOriginId}</p>
+			</div>
+
+			<div>
+				<Select
+					values={logins}
+					bind:value={userDestination}
+					on:change={() => {
+						g.selected[userDestinationId] = false;
+						userDestinationId = sg.id(userDestination);
+						g.selected[userDestinationId] = true;
+						runBfs();
+					}}
+				/>
+				<p>Usuário de <strong>destino</strong> selecionado:</p>
+				<p>{userDestination.length > 0 ? userDestination : NOT_SELECTED}</p>
+				<p>{userDestinationId === -1 ? NOT_SELECTED : 'ID: ' + userDestinationId}</p>
+			</div>
 		</div>
 
-		<div>
-			<Select
-				values={logins}
-				bind:value={userDestination}
-				on:change={() => {
-					g.selected[userDestinationId] = false;
-					userDestinationId = sg.id(userDestination);
-					g.selected[userDestinationId] = true;
-					runBfs();
-				}}
-			/>
-			<p>Usuário de <strong>destino</strong> selecionado:</p>
-			<p>{userDestination.length > 0 ? userDestination : NOT_SELECTED}</p>
-			<p>{userDestinationId === -1 ? NOT_SELECTED : 'ID: ' + userDestinationId}</p>
-		</div>
-	</div>
-
-	<div class="graph-path">
-		{#if pathToDestinationIds.length === 0}
-			<p>Não há caminho</p>
-		{:else}
-			<pre>{pathToDestinationLogins.join(' -> ')}</pre>
-		{/if}
-	</div>
-
-	<div id="canvas-container">
 		<button id="reset" on:click={reset}>Resetar</button>
-		<canvas width={canvasWidth} height={canvasHeight} />
+
+		<div class="graph-path">
+			{#if pathToDestinationIds.length === 0}
+				<p>Não há caminho</p>
+			{:else}
+				<p>Caminhos de seguidores:</p>
+				<ul>
+					{#each pathToDestinationLogins as login}
+						<li><code>{login}</code></li>
+					{/each}
+				</ul>
+			{/if}
+		</div>
+	</div>
+
+	<div class="right">
+		<div id="canvas-container">
+			<canvas width={canvasWidth} height={canvasHeight} />
+		</div>
 	</div>
 </main>
 
 <style>
 	main {
-		margin: 0 auto;
+		margin: 0 16px;
 		display: flex;
-		flex-direction: column;
 	}
 
-	h1 {
+	h2 {
 		text-align: center;
 	}
 
@@ -155,13 +164,18 @@
 		text-align: center;
 	}
 
+	.left {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.right {
+		width: 100%;
+	}
+
 	#canvas-container {
 		margin: 0 auto;
-		width: 80%;
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		margin-bottom: 32px;
+		width: 100%;
 	}
 
 	canvas {
@@ -172,7 +186,19 @@
 		margin-bottom: 16px;
 	}
 
+	div {
+		padding: 0;
+	}
+
 	div > div {
 		padding: 1em;
+	}
+
+	ul {
+		text-align: left;
+	}
+	li {
+		text-align: left;
+		list-style: none;
 	}
 </style>
