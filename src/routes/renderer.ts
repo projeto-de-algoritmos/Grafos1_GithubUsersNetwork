@@ -13,17 +13,21 @@ const nodeRadius = 8;
 const canvasBackgroundColor = '#2e2e2e';
 const lineWidth = 1;
 const lineColor = '#646cff20';
-const lineColorBfs = nodeSelectedColor;
+const linePathColor = nodeSelectedColor;
 
 // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
-const fps = 60,
+// Perde-se quase uns 20fps só renderizando os nós e as arestas
+const fps = 30,
 	fpsInterval = 1000 / fps;
 let lastFrameTime = 0,
 	frameCount = 1,
 	currentFrameTime = 0,
 	startTime = 0;
-const shouldRender = true;
-const requestAnimationFrameId = -1;
+let sinceStart = currentFrameTime - startTime;
+let currentFps = Math.round((1000 / (sinceStart / ++frameCount)) * 100) / 100;
+let elapsedSinceStart = Math.round((sinceStart / 1000) * 100) / 100;
+
+let requestAnimationFrameId = -1;
 
 let g: Digraph;
 let path: number[];
@@ -45,13 +49,11 @@ export function startRendering() {
 }
 
 export function stopRendering() {
-	console.log('stopping rendering');
-	// shouldRender = false
 	cancelAnimationFrame(requestAnimationFrameId);
 }
 
 function Render() {
-	// requestAnimationFrameId = requestAnimationFrame(Render);
+	requestAnimationFrameId = requestAnimationFrame(Render);
 
 	currentFrameTime = window.performance.now();
 	const elapsed = currentFrameTime - lastFrameTime;
@@ -60,26 +62,11 @@ function Render() {
 	if (elapsed > fpsInterval) {
 		lastFrameTime = currentFrameTime - (elapsed % fpsInterval);
 
-		console.log('rendering');
 		clearContext(context, canvas);
 		renderGraphEdges(context, g.adj, g.coords, lineColor, lineWidth);
-		renderPath(context, g.coords, path, lineColorBfs, lineWidth * 1.2);
+		renderPath(context, g.coords, path, linePathColor, lineWidth * 1.2);
 		renderGraphNodes(context, g.adj, g.coords, g.selected);
-		// const sinceStart = currentFrameTime - startTime;
-		// const currentFps = Math.round((1000 / (sinceStart / ++frameCount)) * 100) / 100;
-		// const elapsedSinceStart = Math.round((sinceStart / 1000) * 100) / 100;
-		// console.log(
-		// 	'elapsed',
-		// 	elapsedSinceStart,
-		// 	'fps',
-		// 	fps,
-		// 	'since last frame',
-		// 	Math.round((elapsed / 1000) * 1000) / 1000,
-		// 	'currentFps',
-		// 	currentFps,
-		// 	'fpsInterval',
-		// 	fpsInterval
-		// );
+		// printRenderInfo(elapsed);
 	}
 }
 
@@ -137,7 +124,6 @@ function renderGraphEdges(
 	context.lineWidth = width;
 	context.fillStyle = nodeBackgroundColor;
 	context.strokeStyle = color;
-	// console.log(context.strokeStyle);
 
 	for (let i = 0; i < nodes.length; i++) {
 		node = nodes[i];
@@ -173,4 +159,23 @@ function renderPath(
 		context.lineTo(coords[currId].x, coords[currId].y);
 		context.stroke();
 	}
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function printRenderInfo(elapsed: number) {
+	sinceStart = currentFrameTime - startTime;
+	currentFps = Math.round((1000 / (sinceStart / ++frameCount)) * 100) / 100;
+	elapsedSinceStart = Math.round((sinceStart / 1000) * 100) / 100;
+	console.log(
+		'elapsed',
+		elapsedSinceStart,
+		'fps',
+		fps,
+		'since last frame',
+		Math.round((elapsed / 1000) * 1000) / 1000,
+		'currentFps',
+		currentFps,
+		'fpsInterval',
+		fpsInterval
+	);
 }

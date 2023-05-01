@@ -29,10 +29,6 @@
 	let pathToDestinationLogins: string[] = [];
 
 	function runBfs() {
-		// FIXME: idealmente haveria um loop de renderização. Mas da última
-		// vez que eu fiz ele ficava cada vez mais devagar com o tempo. A
-		// renderização é pontual agora com a chamada de `startRendering`
-		startRendering();
 		if (userOrigin === '' || userDestination === '') return;
 
 		bfs = new DiBfs(g, userOriginId);
@@ -43,11 +39,12 @@
 		}
 
 		setDrawables(g, canvas, pathToDestinationIds);
-		startRendering();
 	}
 
 	function reset() {
-		console.log('resetando valores');
+		console.log('Resetando valores');
+		g.selected[userOriginId] = false;
+		g.selected[userDestinationId] = false;
 		userOrigin = '';
 		userDestination = '';
 		userOriginId = -1;
@@ -57,7 +54,6 @@
 		bfs = null;
 
 		setDrawables(g, canvas, pathToDestinationIds);
-		startRendering();
 	}
 
 	onMount(() => {
@@ -76,10 +72,8 @@
 
 		setDrawables(g, canvas, pathToDestinationIds);
 		startRendering();
-	});
 
-	onMount(() => {
-		// stopRendering();
+		return () => stopRendering();
 	});
 </script>
 
