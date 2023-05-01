@@ -46,7 +46,7 @@ export default class SymbolGraph {
 
 	id(s: string): number {
 		const i = this.table.get(s);
-		if (!i) return -1;
+		if (i === undefined) return -1;
 		return i;
 	}
 
