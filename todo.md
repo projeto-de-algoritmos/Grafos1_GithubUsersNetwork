@@ -1,4 +1,0 @@
-- estilizar app
-- gravar vídeo
-- completar instruções no README
-- botão pra limpar filtro
