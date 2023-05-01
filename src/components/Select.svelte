@@ -50,4 +50,18 @@
 	div > input {
 		margin-bottom: 8px;
 	}
+
+	input {
+		height: 1.2em;
+		border-radius: 8px;
+		border: 0;
+		padding: 8px;
+	}
+
+	select {
+		height: 2.2em;
+		border-radius: 8px;
+		border: 0;
+		padding: 8px;
+	}
 </style>

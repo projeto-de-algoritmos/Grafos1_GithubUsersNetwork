@@ -1,4 +1,6 @@
 <script lang="ts">
+	import './style.css';
+
 	import { onMount } from 'svelte';
 	import Select from '../components/Select.svelte';
 	import DiBfs from '../dibfs';
@@ -60,8 +62,8 @@
 		canvas = document.querySelector('canvas')!;
 		const canvasContainer = document.querySelector<HTMLDivElement>('#canvas-container')!;
 
-		canvas.height = canvasContainer.clientHeight;
 		canvas.width = canvasContainer.clientWidth;
+		canvas.height = canvas.width / 1.8;
 		setCoordsRandomly({
 			g,
 			xMax: canvas.width - 30,
@@ -126,13 +128,23 @@
 		{/if}
 	</div>
 
-	<button on:click={reset}>Resetar</button>
 	<div id="canvas-container">
+		<button id="reset" on:click={reset}>Resetar</button>
 		<canvas width={canvasWidth} height={canvasHeight} />
 	</div>
 </main>
 
 <style>
+	main {
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	h1 {
+		text-align: center;
+	}
+
 	.inputs {
 		display: flex;
 		justify-content: center;
@@ -144,7 +156,16 @@
 	}
 
 	#canvas-container {
-		width: 100%;
+		margin: 0 auto;
+		width: 80%;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		margin-bottom: 32px;
+	}
+
+	#reset {
+		margin-bottom: 16px;
 	}
 
 	div > div {

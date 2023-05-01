@@ -12,7 +12,7 @@ const nodeSelectedColor = '#E3C240';
 const nodeRadius = 8;
 const canvasBackgroundColor = '#2e2e2e';
 const lineWidth = 1;
-const lineColor = '#646cff20';
+const lineColor = '#646cff25';
 const linePathColor = nodeSelectedColor;
 
 // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
@@ -89,7 +89,8 @@ function renderGraphNodes(
 ) {
 	context.font = textSize + ' Helvetica';
 	context.lineWidth = lineWidth;
-	const offset = 5;
+	const yOffset = 4;
+	const xOffset = 6;
 	let isSelected = false;
 	const selectedNodeRadius = nodeRadius * 1.2;
 	for (let i = 0; i < nodes.length; i++) {
@@ -107,7 +108,7 @@ function renderGraphNodes(
 		context.fill();
 		context.stroke();
 		context.fillStyle = textColor;
-		context.fillText(String(i), coords[i].x - offset, coords[i].y + offset);
+		context.fillText(String(i), coords[i].x - xOffset, coords[i].y + yOffset);
 	}
 }
 
