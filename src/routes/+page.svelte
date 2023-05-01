@@ -164,6 +164,10 @@
 		margin-bottom: 32px;
 	}
 
+	canvas {
+		border-radius: 8px;
+	}
+
 	#reset {
 		margin-bottom: 16px;
 	}
