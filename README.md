@@ -57,7 +57,28 @@ Mostra o caminho entre dois usuários.
 
 **Framework**: Svelte
 
-Você precisa do [Node.js](https://nodejs.org/en) versão 16+.
+Você precisa do [Node.js](https://nodejs.org/en) versão 16+ e de um gerenciador
+de pacotes como
+[npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) ou
+[pnpm](https://pnpm.io/installation).
+
+Instale as dependências:
+
+```sh
+npm i
+# ou se você usa pnpm:
+pnpm i
+```
+
+Inicie o servidor da aplicação:
+
+```sh
+npm run dev
+# ou
+pnpm dev
+```
+
+Acesse a aplicação em http://localhost:5173/.
 
 ## Uso
 
