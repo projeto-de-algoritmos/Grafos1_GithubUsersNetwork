@@ -18,7 +18,7 @@ const linePathColor = nodeSelectedColor;
 
 // https://stackoverflow.com/questions/19764018/controlling-fps-with-requestanimationframe
 // Perde-se quase uns 20fps só renderizando os nós e as arestas
-const fps = 30,
+const fps = 60,
 	fpsInterval = 1000 / fps;
 let lastFrameTime = 0,
 	frameCount = 1,
