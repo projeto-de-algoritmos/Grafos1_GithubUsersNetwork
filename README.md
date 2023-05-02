@@ -6,10 +6,10 @@
 
 ## Alunos
 
-| Matrícula  | Aluno                     |
-| ---------- | ------------------------- |
-| 16/0127912 | João Vitor Ferreira Alves |
-| 16/0149410 | Yudi Yamane de Azevedo    |
+| Matrícula  | Aluno                                                       |
+| ---------- | ----------------------------------------------------------- |
+| 16/0127912 | [João Vitor Ferreira Alves](https://github.com/vitorAlves7) |
+| 16/0149410 | [Yudi Yamane de Azevedo](https://github.com/yudi-azvd)      |
 
 ## Sobre
 
@@ -23,6 +23,15 @@ seguidores.
 
 Você pode escolher dois usuários e o app vai te mostrar o menor caminho que liga
 os dois de acordo com os seus seguidores.
+
+---
+
+### Apresentação
+
+O vídeo está em [./pa-0-grafos.mp4](./pa-0-grafos.mp4).
+
+Você também pode assistir a [apresetação](https://youtu.be/hUagdM_plRs)
+pelo YouTube.
 
 ## Screenshots
 
